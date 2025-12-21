@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Syntax Sorcerer",
   description: "Developed by Samrat Karki",
+  icons:{
+    icon:"/icon.png"
+  }
 };
 
 export default function RootLayout({
