@@ -68,6 +68,7 @@ export const AppSidebar = () => {
   const user = session.user;
   const username = user.name || "Guest";
   const userEmail = user.email || " ";
+  const useAvatar = user.image || " ";
   const userInitials = username
     .split(" ")
     .map((n) => n[0])
@@ -119,6 +120,38 @@ export const AppSidebar = () => {
           ))}
         </SidebarMenu>
       </SidebarContent>
+      <SidebarFooter className="border-t px-3 py-4 ">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenuItem>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="h-12 px-4 rounded-lg data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent/50 transition-colors "
+                >
+                  <Avatar className="h-10 w-10 rounded-lg shrink-0">
+                    <AvatarImage
+                      src={useAvatar || "/placeholder.svg"}
+                      alt={username}
+                    />
+                    <AvatarFallback className="rounded-lg">
+                      {userInitials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm  leading-relaxed min-w-0">
+                    <span className="truncate font-semibold text-base">
+                      {username}
+                    </span>
+                    <span className="truncate text-xs text-sidebar-foreground/70">
+                      {userEmail}
+                    </span>
+                  </div>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+            </DropdownMenuItem>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };
