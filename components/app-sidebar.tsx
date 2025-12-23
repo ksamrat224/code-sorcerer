@@ -123,7 +123,7 @@ export const AppSidebar = () => {
       <SidebarFooter className="border-t px-3 py-4 ">
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
@@ -148,7 +148,7 @@ export const AppSidebar = () => {
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-            </DropdownMenuItem>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
