@@ -148,6 +148,33 @@ export const AppSidebar = () => {
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-80 rounded-lg"
+                align="end"
+                side="right"
+                sideOffset={8}
+              >
+                <div className="px-2 py-3 border-t border-b">
+                  <DropdownMenuItem asChild>
+                    <button
+                      onClick={() =>
+                        setTheme(theme === "dark" ? "light" : "dark")
+                      }
+                      className="w-full px-3 py-3 flex items-center gap-3 cursor-pointer rounded-md hover:bg-sidebar-accent/50 transition-colors text-sm font-medium"
+                    >
+                      {theme === "dark" ? (
+                        <>
+                          <Sun className="w-4 h-4" /> <span>Light Mode</span>
+                        </>
+                      ) : (
+                        <>
+                          <Moon className="w-4 h-4" /> <span>Dark Mode</span>
+                        </>
+                      )}
+                    </button>
+                  </DropdownMenuItem>
+                </div>
+              </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
