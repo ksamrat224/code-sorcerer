@@ -25,7 +25,9 @@ export async function getDashboardStats() {
     //fetch total repo future
     const totalRepos = 30;
     const calendar = await fetchUserContribution(token, user.login);
-    const totalCommits = calendar?.totalContributions || 0;
+    const totalCommits =
+      calendar?.user?.contributionsCollection?.contributionCalendar
+        ?.totalContributions || 0;
 
     const { data: prs } = await octokit.rest.search.issuesAndPullRequests({
       q: `author:${user.login} type:pr`,
@@ -89,7 +91,10 @@ export async function getMonthlyActivity() {
       const monthKey = monthNames[date.getMonth()];
       monthlyData[monthKey] = { commits: 0, prs: 0, reviews: 0 };
     }
-    calendar.weeks.forEach((week: any) => {
+    const weeks =
+      calendar?.user?.contributionsCollection?.contributionCalendar?.weeks ||
+      [];
+    weeks.forEach((week: any) => {
       week.contributionDays.forEach((day: any) => {
         const date = new Date(day.date);
         const monthKey = monthNames[date.getMonth()];
@@ -122,7 +127,7 @@ export async function getMonthlyActivity() {
       }
     });
     const { data: prs } = await octokit.rest.search.issuesAndPullRequests({
-      q: `author:${user.login} type:pr created:> ${
+      q: `author:${user.login} type:pr created:>${
         sixMonthsAgo.toISOString().split("T")[0]
       }`,
       per_page: 100,
