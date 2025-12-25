@@ -28,6 +28,7 @@ import {
   getDashboardStats,
   getMonthlyActivity,
 } from "@/module/dashboard/actions";
+import ContributionGraph from "@/module/dashboard/components/contribution-graph";
 
 const MainPage = () => {
   const { data: stats, isLoading } = useQuery({
@@ -105,6 +106,16 @@ const MainPage = () => {
           </CardContent>
         </Card>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Contribution Activity</CardTitle>
+          <CardDescription>Visualizing your coding frequency over the last year</CardDescription>
+
+        </CardHeader>
+        <CardContent>
+          <ContributionGraph/>
+        </CardContent>
+      </Card>
     </div>
   );
 };
