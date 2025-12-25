@@ -14,6 +14,7 @@ interface ContributionWeek {
 }
 
 interface ContributionData {
+  totalContributions: number;
   user: {
     contributionsCollection: {
       contributionCalendar: {
