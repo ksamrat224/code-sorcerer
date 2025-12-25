@@ -54,20 +54,29 @@ export async function fetchUserContribution(token: string, username: string) {
   const query = `
   query ($username: String!) {
     user(login: $username) {
-    contributionsCollection {
-      contributionCalendar{
-        totalContributions
-        weeks{
-          contributionDays{
-            date
-            contributionCount
-            color
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+              color
+            }
           }
-        }}}`;
+        }
+      }
+    }
+  }
+`;
+
   try {
     const response: ContributionData = await octokit.graphql(query, {
       username,
     });
     return response;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to fetch GitHub contributions:", error);
+    throw new Error("Unable to fetch GitHub contribution data");
+  }
 }
