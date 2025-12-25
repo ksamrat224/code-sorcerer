@@ -3,27 +3,28 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { headers } from "next/headers";
 
-interface ContributionDay {
-  date: string;
-  contributionCount: number;
-  color: string;
-}
+// interface ContributionDay {
+//   date: string;
+//   contributionCount: number;
+//   color: string;
+// }
 
-interface ContributionWeek {
-  contributionDays: ContributionDay[];
-}
+// interface ContributionWeek {
+//   contributionDays: ContributionDay[];
+// }
 
-interface ContributionData {
-  totalContributions: number;
-  user: {
-    contributionsCollection: {
-      contributionCalendar: {
-        totalContributions: number;
-        weeks: ContributionWeek[];
-      };
-    };
-  };
-}
+// interface ContributionData {
+//   weeks: ContributionWeek[];
+//   totalContributions: number;
+//   user: {
+//     contributionsCollection: {
+//       contributionCalendar: {
+//         totalContributions: number;
+//         weeks: ContributionWeek[];
+//       };
+//     };
+//   };
+// }
 
 /**
  * Getting the github access token of the logged in user
@@ -72,7 +73,7 @@ export async function fetchUserContribution(token: string, username: string) {
 `;
 
   try {
-    const response: ContributionData = await octokit.graphql(query, {
+    const response: any = await octokit.graphql(query, {
       username,
     });
     return response;
