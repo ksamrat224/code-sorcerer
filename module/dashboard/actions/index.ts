@@ -67,9 +67,7 @@ export async function getDashboardStats() {
     //fetch total repo future
     const totalRepos = 30;
     const calendar = await fetchUserContribution(token, user.login);
-    const totalCommits =
-      calendar?.user?.contributionsCollection?.contributionCalendar
-        ?.totalContributions || 0;
+    const totalCommits = calendar?.totalContributions || 0;
 
     const { data: prs } = await octokit.rest.search.issuesAndPullRequests({
       q: `author:${user.login} type:pr`,
