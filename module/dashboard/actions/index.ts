@@ -131,9 +131,7 @@ export async function getMonthlyActivity() {
       const monthKey = monthNames[date.getMonth()];
       monthlyData[monthKey] = { commits: 0, prs: 0, reviews: 0 };
     }
-    const weeks =
-      calendar?.user?.contributionsCollection?.contributionCalendar?.weeks ||
-      [];
+    const weeks = calendar?.weeks || [];
     weeks.forEach((week: any) => {
       week.contributionDays.forEach((day: any) => {
         const date = new Date(day.date);

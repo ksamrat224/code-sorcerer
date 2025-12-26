@@ -22,6 +22,7 @@ import {
   GitPullRequest,
   MessageSquare,
   GitBranch,
+  Divide,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -29,6 +30,7 @@ import {
   getMonthlyActivity,
 } from "@/module/dashboard/actions";
 import ContributionGraph from "@/module/dashboard/components/contribution-graph";
+import { Spinner } from "@/components/ui/spinner";
 
 const MainPage = () => {
   const { data: stats, isLoading } = useQuery({
@@ -109,13 +111,53 @@ const MainPage = () => {
       <Card>
         <CardHeader>
           <CardTitle>Contribution Activity</CardTitle>
-          <CardDescription>Visualizing your coding frequency over the last year</CardDescription>
-
+          <CardDescription>
+            Visualizing your coding frequency over the last year
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <ContributionGraph/>
+          <ContributionGraph />
         </CardContent>
       </Card>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="col-span-2">
+          <CardHeader>
+            <CardTitle>Activity Overview</CardTitle>
+            <CardDescription>
+              Monthly breakdown of commits,PRs and reviews(last 6 months)
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            {isLoadingActivity ? (
+              <div className="h-80 w-full flex items-center justify-center">
+                <Spinner />
+              </div>
+            ) : (
+              <div className="h-80 w-full">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={monthlyActivity || []}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "var(--background)",
+                        borderColor: "var(--border)",
+                      }}
+                      itemStyle={{ color: "var(--muted-foreground)" }}
+                    />
+                    <Legend />
+                    <Bar dataKey="commits" name="Commits" fill="#3b82f6"  radius={[4,4,0,0]}/>
+                    <Bar dataKey="prs" name="Pull Requests" fill="#8b5cf6" radius={[4,4,0,0]} />
+                    <Bar dataKey="reviews" name="AI Reviews" fill="#10b981" radius={[4,4,0,0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
