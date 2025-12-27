@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import {
   Card,
   CardContent,
@@ -13,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { ExternalLink, Star, Search } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRepositories } from "@/module/repository/hooks/use-repositories";
-import { unknown } from "zod";
 import { RepositoryListSkeleton } from "@/module/repository/components/repository-skeleton";
 
 interface Repository {
