@@ -82,3 +82,20 @@ export async function fetchUserContribution(token: string, username: string) {
     throw new Error("Unable to fetch GitHub contribution data");
   }
 }
+
+export const getRepositories = async (
+  page: number = 1,
+  perPage: number = 10
+) => {
+  const token = await getGithubToken();
+  const octokit = new Octokit({ auth: token });
+
+  const { data } = await octokit.rest.repos.listForAuthenticatedUser({
+    sort: "updated",
+    direction: "desc",
+    per_page: perPage,
+    page: page,
+    visibility: "all",
+  });
+  return data;
+};

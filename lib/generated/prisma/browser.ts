@@ -28,6 +28,11 @@ export type Test = Prisma.TestModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Repository
+ * 
+ */
+export type Repository = Prisma.RepositoryModel
+/**
  * Model Session
  * 
  */

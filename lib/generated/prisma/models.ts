@@ -10,6 +10,7 @@
  */
 export type * from './models/Test'
 export type * from './models/User'
+export type * from './models/Repository'
 export type * from './models/Session'
 export type * from './models/Account'
 export type * from './models/Verification'
