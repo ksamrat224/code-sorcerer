@@ -30,3 +30,38 @@ export async function getUserProfile() {
     return null;
   }
 }
+
+export async function updateUserProfile(data: {
+  name?: string;
+  email?: string;
+}) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (!session?.user) {
+      throw new Error("Unauthorized");
+    }
+    const updateUser = await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        name: data.name,
+        email: data.email,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        createdAt: true,
+      },
+    });
+    revalidatePath("/dashboard/settings", "page");
+    return { success: true, user: updateUser };
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return { success: false, error: "Failed to update profile." };
+  }
+}
