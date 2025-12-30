@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { connectRepository } from "../actions";
 import { toast } from "sonner";
-import { error } from "console";
 
 export const useConnectRepository = () => {
   const queryClient = useQueryClient();
@@ -26,7 +25,6 @@ export const useConnectRepository = () => {
     },
     onError: () => {
       toast.error("Failed to connect repository");
-      console.error(error);
     },
   });
 };
