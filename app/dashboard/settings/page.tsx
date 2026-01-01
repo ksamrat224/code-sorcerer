@@ -1,5 +1,6 @@
 "use client";
 
+import { ProfileForm } from "@/module/settings/components/profile-form";
 import React from "react";
 
 const SettingPage = () => {
@@ -11,6 +12,7 @@ const SettingPage = () => {
           Manage your account settings and preferences.
         </p>
       </div>
+      <ProfileForm />
     </div>
   );
 };
