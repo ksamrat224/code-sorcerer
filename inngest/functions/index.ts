@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import { inngest } from "../../inngest/client";
 import { getRepoFileContents } from "@/module/github/lib/github";
+import { indexCodebase } from "@/module/ai/lib/rag";
 
 export const indexRepo = inngest.createFunction(
   { id: "index-repo" },
@@ -22,7 +23,8 @@ export const indexRepo = inngest.createFunction(
       return await getRepoFileContents(account.accessToken, owner, repo);
     });
     await step.run("index-codebase", async () => {
-      //await indexCodebase
+      await indexCodebase(`${owner}-${repo}`, files);
     });
+    return { success: true, indexFiles: files.length };
   }
 );
