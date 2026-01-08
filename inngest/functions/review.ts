@@ -1,8 +1,12 @@
 import { inngest } from "../client";
-import { getPullRequestDiff } from "@/module/github/lib/github";
+import {
+  getPullRequestDiff,
+  postReviewComment,
+} from "@/module/github/lib/github";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import prisma from "@/lib/db";
+import { retrieveContext } from "@/module/ai/lib/rag";
 
 export const generateReview = inngest.createFunction(
   { id: "generate-review", concurrency: 5 },
