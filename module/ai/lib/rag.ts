@@ -44,7 +44,7 @@ export async function indexCodebase(
   console.log("indexing complete");
 }
 
-export async function retrieveContent(
+export async function retrieveContext(
   query: string,
   repoId: string,
   topK: number = 5

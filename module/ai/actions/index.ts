@@ -37,7 +37,6 @@ export async function reviewPullRequest(
       throw new Error("No GitHub access token found for repository owner");
     }
     const token = githubAccount.accessToken;
-    const { title } = await getPullRequestDiff(token, owner, repo, prNumber);
 
     await inngest.send({
       name: "pr.review.requested",
