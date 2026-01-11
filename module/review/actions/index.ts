@@ -10,7 +10,7 @@ export async function getReviews() {
   if (!session) {
     throw new Error("Unauthorized");
   }
-  const review = await prisma.review.findMany({
+  const reviews = await prisma.review.findMany({
     where: {
       repository: {
         userId: session.user.id,
@@ -24,4 +24,5 @@ export async function getReviews() {
     },
     take: 50,
   });
+  return reviews;
 }
