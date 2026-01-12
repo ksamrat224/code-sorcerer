@@ -388,6 +388,7 @@ export const ModelName = {
   User: 'User',
   Review: 'Review',
   Repository: 'Repository',
+  UserUsage: 'UserUsage',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "test" | "user" | "review" | "repository" | "session" | "account" | "verification"
+    modelProps: "test" | "user" | "review" | "repository" | "userUsage" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -706,6 +707,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserUsage: {
+      payload: Prisma.$UserUsagePayload<ExtArgs>
+      fields: Prisma.UserUsageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserUsageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserUsageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>
+        }
+        findFirst: {
+          args: Prisma.UserUsageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserUsageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>
+        }
+        findMany: {
+          args: Prisma.UserUsageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>[]
+        }
+        create: {
+          args: Prisma.UserUsageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>
+        }
+        createMany: {
+          args: Prisma.UserUsageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserUsageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>[]
+        }
+        delete: {
+          args: Prisma.UserUsageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>
+        }
+        update: {
+          args: Prisma.UserUsageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserUsageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserUsageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserUsageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>[]
+        }
+        upsert: {
+          args: Prisma.UserUsageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserUsagePayload>
+        }
+        aggregate: {
+          args: Prisma.UserUsageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserUsage>
+        }
+        groupBy: {
+          args: Prisma.UserUsageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserUsageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserUsageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserUsageCountAggregateOutputType> | number
+        }
+      }
+    }
     Session: {
       payload: Prisma.$SessionPayload<ExtArgs>
       fields: Prisma.SessionFieldRefs
@@ -982,7 +1057,9 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  subscriptionTier: 'subscriptionTier',
+  subscriptionStatus: 'subscriptionStatus'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1016,6 +1093,18 @@ export const RepositoryScalarFieldEnum = {
 } as const
 
 export type RepositoryScalarFieldEnum = (typeof RepositoryScalarFieldEnum)[keyof typeof RepositoryScalarFieldEnum]
+
+
+export const UserUsageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  repositoryCount: 'repositoryCount',
+  reviewCounts: 'reviewCounts',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserUsageScalarFieldEnum = (typeof UserUsageScalarFieldEnum)[keyof typeof UserUsageScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
@@ -1071,6 +1160,13 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -1085,6 +1181,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -1153,6 +1258,20 @@ export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'BigInt[]'
  */
 export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1268,6 +1387,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   review?: Prisma.ReviewOmit
   repository?: Prisma.RepositoryOmit
+  userUsage?: Prisma.UserUsageOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
