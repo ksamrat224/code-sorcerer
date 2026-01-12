@@ -38,6 +38,11 @@ export type Review = Prisma.ReviewModel
  */
 export type Repository = Prisma.RepositoryModel
 /**
+ * Model UserUsage
+ * 
+ */
+export type UserUsage = Prisma.UserUsageModel
+/**
  * Model Session
  * 
  */
