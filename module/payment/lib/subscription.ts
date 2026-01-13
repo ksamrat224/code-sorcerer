@@ -57,3 +57,16 @@ async function getUserUsage(userId: string) {
 
   return usage;
 }
+
+export async function canConnectRepository(userId: string): Promise<boolean> {
+  const tier = await getUserTier(userId);
+
+  if (tier === "PRO") {
+    return true; // Unlimited for pro users
+  }
+
+  const usage = await getUserUsage(userId);
+  const limit = TIER_LIMITS.FREE.repositories;
+
+  return usage.repositoryCount < limit;
+}
