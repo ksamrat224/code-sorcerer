@@ -71,7 +71,6 @@ export async function canConnectRepository(userId: string): Promise<boolean> {
   return usage.repositoryCount < limit;
 }
 
-
 export async function canCreateReview(
   userId: string,
   repositoryId: string
@@ -94,19 +93,19 @@ export async function canCreateReview(
  * Increment repository count for user
  */
 export async function incrementRepositoryCount(userId: string): Promise<void> {
-    await prisma.userUsage.upsert({
-        where: { userId },
-        create: {
-            userId,
-            repositoryCount: 1,
-            reviewCounts: {},
-        },
-        update: {
-            repositoryCount: {
-                increment: 1,
-            },
-        },
-    });
+  await prisma.userUsage.upsert({
+    where: { userId },
+    create: {
+      userId,
+      repositoryCount: 1,
+      reviewCounts: {},
+    },
+    update: {
+      repositoryCount: {
+        increment: 1,
+      },
+    },
+  });
 }
 
 export async function decrementRepositoryCount(userId: string): Promise<void> {
@@ -185,4 +184,3 @@ export async function updateUserTier(
     },
   });
 }
-
