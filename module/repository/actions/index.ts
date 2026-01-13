@@ -4,6 +4,11 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { createWebhook, getRepositories } from "@/module/github/lib/github";
 import { inngest } from "@/inngest/client";
+import {
+  canConnectRepository,
+  decrementRepositoryCount,
+  incrementRepositoryCount,
+} from "@/module/payment/lib/subscription";
 
 export const fetchRepositories = async (
   page: number = 1,
@@ -41,7 +46,14 @@ export const connectRepository = async (
   if (!session) {
     throw new Error("User is not authorized");
   }
+
   //todo:check if user can cnnect more repos
+  const canConnect = await canConnectRepository(session.user.id);
+  if (!canConnect) {
+    throw new Error(
+      "You have reached the maximum number of connected repositories for your plan. Please upgrade your subscription to connect more repositories."
+    );
+  }
   const webhook = await createWebhook(owner, repo);
 
   if (webhook) {
@@ -55,21 +67,23 @@ export const connectRepository = async (
         userId: session.user.id,
       },
     });
-  }
-  //todo:increment repository count for usage tracking
 
-  //trigger repository indexing for rag(fire and forget)
-  try {
-    await inngest.send({
-      name: "repository.connected",
-      data: {
-        owner,
-        repo,
-        userId: session.user.id,
-      },
-    });
-  } catch (error) {
-    console.error("Failed to triggger repository indexing:", error);
+    //todo:increment repository count for usage tracking
+    await incrementRepositoryCount(session.user.id);
+
+    //trigger repository indexing for rag(fire and forget)
+    try {
+      await inngest.send({
+        name: "repository.connected",
+        data: {
+          owner,
+          repo,
+          userId: session.user.id,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to triggger repository indexing:", error);
+    }
   }
   return webhook;
 };
