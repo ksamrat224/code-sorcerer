@@ -108,3 +108,14 @@ export async function incrementRepositoryCount(userId: string): Promise<void> {
         },
     });
 }
+
+export async function decrementRepositoryCount(userId: string): Promise<void> {
+  const usage = await getUserUsage(userId);
+
+  await prisma.userUsage.update({
+    where: { userId },
+    data: {
+      repositoryCount: Math.max(0, usage.repositoryCount - 1),
+    },
+  });
+}
