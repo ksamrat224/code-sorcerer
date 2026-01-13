@@ -89,3 +89,22 @@ export async function canCreateReview(
 
   return currentCount < limit;
 }
+
+/**
+ * Increment repository count for user
+ */
+export async function incrementRepositoryCount(userId: string): Promise<void> {
+    await prisma.userUsage.upsert({
+        where: { userId },
+        create: {
+            userId,
+            repositoryCount: 1,
+            reviewCounts: {},
+        },
+        update: {
+            repositoryCount: {
+                increment: 1,
+            },
+        },
+    });
+}
