@@ -67,21 +67,23 @@ export const connectRepository = async (
         userId: session.user.id,
       },
     });
-  }
-  //todo:increment repository count for usage tracking
 
-  //trigger repository indexing for rag(fire and forget)
-  try {
-    await inngest.send({
-      name: "repository.connected",
-      data: {
-        owner,
-        repo,
-        userId: session.user.id,
-      },
-    });
-  } catch (error) {
-    console.error("Failed to triggger repository indexing:", error);
+    //todo:increment repository count for usage tracking
+    await incrementRepositoryCount(session.user.id);
+
+    //trigger repository indexing for rag(fire and forget)
+    try {
+      await inngest.send({
+        name: "repository.connected",
+        data: {
+          owner,
+          repo,
+          userId: session.user.id,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to triggger repository indexing:", error);
+    }
   }
   return webhook;
 };
