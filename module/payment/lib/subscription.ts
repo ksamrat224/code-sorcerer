@@ -136,3 +136,38 @@ export async function incrementReviewCount(
     },
   });
 }
+
+export async function getRemainingLimits(userId: string): Promise<UserLimits> {
+  const tier = await getUserTier(userId);
+  const usage = await getUserUsage(userId);
+  const reviewCounts = usage.reviewCounts as Record<string, number>;
+
+  const limits: UserLimits = {
+    tier,
+    repositories: {
+      current: usage.repositoryCount,
+      limit: tier === "PRO" ? null : TIER_LIMITS.FREE.repositories,
+      canAdd:
+        tier === "PRO" || usage.repositoryCount < TIER_LIMITS.FREE.repositories,
+    },
+    reviews: {},
+  };
+
+  // Get all user's repositories
+  const repositories = await prisma.repository.findMany({
+    where: { userId },
+    select: { id: true },
+  });
+
+  // Calculate limits for each repository
+  for (const repo of repositories) {
+    const currentCount = reviewCounts[repo.id] || 0;
+    limits.reviews[repo.id] = {
+      current: currentCount,
+      limit: tier === "PRO" ? null : TIER_LIMITS.FREE.reviewsPerRepo,
+      canAdd: tier === "PRO" || currentCount < TIER_LIMITS.FREE.reviewsPerRepo,
+    };
+  }
+
+  return limits;
+}
