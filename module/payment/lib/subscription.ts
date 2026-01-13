@@ -119,3 +119,20 @@ export async function decrementRepositoryCount(userId: string): Promise<void> {
     },
   });
 }
+
+export async function incrementReviewCount(
+  userId: string,
+  repositoryId: string
+): Promise<void> {
+  const usage = await getUserUsage(userId);
+  const reviewCounts = usage.reviewCounts as Record<string, number>;
+
+  reviewCounts[repositoryId] = (reviewCounts[repositoryId] || 0) + 1;
+
+  await prisma.userUsage.update({
+    where: { userId },
+    data: {
+      reviewCounts,
+    },
+  });
+}
