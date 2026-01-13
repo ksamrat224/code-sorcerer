@@ -70,3 +70,22 @@ export async function canConnectRepository(userId: string): Promise<boolean> {
 
   return usage.repositoryCount < limit;
 }
+
+
+export async function canCreateReview(
+  userId: string,
+  repositoryId: string
+): Promise<boolean> {
+  const tier = await getUserTier(userId);
+
+  if (tier === "PRO") {
+    return true; // Unlimited for pro users
+  }
+
+  const usage = await getUserUsage(userId);
+  const reviewCounts = usage.reviewCounts as Record<string, number>;
+  const currentCount = reviewCounts[repositoryId] || 0;
+  const limit = TIER_LIMITS.FREE.reviewsPerRepo;
+
+  return currentCount < limit;
+}
