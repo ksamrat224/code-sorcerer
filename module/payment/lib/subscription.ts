@@ -40,3 +40,20 @@ export async function getUserTier(userId: string): Promise<SubscriptionTier> {
 
   return (user?.subscriptionTier as SubscriptionTier) || "FREE";
 }
+async function getUserUsage(userId: string) {
+  let usage = await prisma.userUsage.findUnique({
+    where: { userId },
+  });
+
+  if (!usage) {
+    usage = await prisma.userUsage.create({
+      data: {
+        userId,
+        repositoryCount: 0,
+        reviewCounts: {},
+      },
+    });
+  }
+
+  return usage;
+}
