@@ -44,7 +44,10 @@ export const auth = betterAuth({
         usage(),
         webhooks({
           secret: process.env.POLAR_WEBHOOK_SECRET!,
-          onSubscriptionActive: async () => {},
+          onSubscriptionActive: async (payload) => {
+            const customerId = payload.data.customerId;
+            
+          },
           onSubscriptionCanceled: async () => {},
           onSubscriptionRevoked: async () => {},
           onOrderPaid: async () => {},
