@@ -29,8 +29,8 @@ export const auth = betterAuth({
         checkout({
           products: [
             {
-              productId: "cebdb051-8154-4e01-8bfd-6a0b17620bdf",
-              slug: "code-sorcerer", // Custom slug for easy reference in Checkout URL, e.g. /checkout/code-sorcerer
+              productId: "91a6749e-35d4-4fe2-ae51-c3d7510ebe05",
+              slug: "samrat", // Custom slug for easy reference in Checkout URL, e.g. /checkout/code-sorcerer
             },
           ],
           successUrl: process.env.POLAR_SUCCESS_URL,
