@@ -73,7 +73,17 @@ export const auth = betterAuth({
               );
             }
           },
-          onSubscriptionRevoked: async () => {},
+          onSubscriptionRevoked: async (payload) => {
+            const customerId = payload.data.customerId;
+
+            const user = await prisma.user.findUnique({
+              where: { polarCustomerId: customerId },
+            });
+
+            if (user) {
+              await updateUserTier(user.id, "FREE", "EXPPIRED");
+            }
+          },
           onOrderPaid: async () => {},
           onCustomerCreated: async () => {},
         }),
