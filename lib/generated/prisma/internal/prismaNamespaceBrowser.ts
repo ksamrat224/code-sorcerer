@@ -94,7 +94,9 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   subscriptionTier: 'subscriptionTier',
-  subscriptionStatus: 'subscriptionStatus'
+  subscriptionStatus: 'subscriptionStatus',
+  polarCustomerId: 'polarCustomerId',
+  polarSubscriptionId: 'polarSubscriptionId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
