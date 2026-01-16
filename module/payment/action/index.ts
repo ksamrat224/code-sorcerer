@@ -5,6 +5,7 @@ import { getRemainingLimits, updateUserTier } from "../lib/subscription";
 import { headers } from "next/headers";
 import { polarClient } from "@/module/payment/config/polar";
 import prisma from "@/lib/db";
+import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 
 export interface SubscriptionData {
   user: {
@@ -59,4 +60,53 @@ export async function getSubscriptionData(): Promise<SubscriptionData> {
     },
     limits,
   };
+}
+
+export async function syncSubscriptionStatus() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    throw new Error("Not authenticated");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+  });
+
+  if (!user || !user.polarCustomerId) {
+    return { success: false, message: "No Polar customer ID found" };
+  }
+
+  try {
+    // Fetch subscriptions from Polar
+    const result = await polarClient.subscriptions.list({
+      customerId: user.polarCustomerId,
+    });
+
+    const subscriptions = result.result?.items || [];
+
+    // Find the most relevant subscription (active or most recent)
+    const activeSub = subscriptions.find((sub: Subscription) => sub.status === "active");
+    const latestSub = subscriptions[0]; // Assuming API returns sorted or we should sort
+
+    if (activeSub) {
+      await updateUserTier(user.id, "PRO", "ACTIVE", activeSub.id);
+      return { success: true, status: "ACTIVE" };
+    } else if (latestSub) {
+      // If latest is canceled/expired
+      const status = latestSub.status === "canceled" ? "CANCELLED" : "EXPPIRED";
+      // Only downgrade if we are sure it's not active
+      if (latestSub.status !== "active") {
+        await updateUserTier(user.id, "FREE", status, latestSub.id);
+      }
+      return { success: true, status };
+    }
+
+    return { success: true, status: "NO_SUBSCRIPTION" };
+  } catch (error) {
+    console.error("Failed to sync subscription:", error);
+    return { success: false, error: "Failed to sync with Polar" };
+  }
 }
