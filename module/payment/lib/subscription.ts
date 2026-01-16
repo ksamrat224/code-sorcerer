@@ -3,7 +3,7 @@
 import prisma from "@/lib/db";
 
 export type SubscriptionTier = "FREE" | "PRO";
-export type SubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPPIRED";
+export type SubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED";
 
 export interface UserLimits {
   tier: SubscriptionTier;

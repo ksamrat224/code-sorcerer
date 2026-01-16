@@ -96,7 +96,7 @@ export async function syncSubscriptionStatus() {
       return { success: true, status: "ACTIVE" };
     } else if (latestSub) {
       // If latest is canceled/expired
-      const status = latestSub.status === "canceled" ? "CANCELLED" : "EXPPIRED";
+      const status = latestSub.status === "canceled" ? "CANCELLED" : "EXPIRED";
       // Only downgrade if we are sure it's not active
       if (latestSub.status !== "active") {
         await updateUserTier(user.id, "FREE", status, latestSub.id);

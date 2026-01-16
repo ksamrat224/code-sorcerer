@@ -10,6 +10,7 @@ import {
 } from "@polar-sh/better-auth";
 import { polarClient } from "@/module/payment/config/polar";
 import {
+  SubscriptionTier,
   updatePolarCustomerId,
   updateUserTier,
 } from "@/module/payment/lib/subscription";
@@ -25,6 +26,10 @@ export const auth = betterAuth({
       scope: ["repo"],
     },
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://eventfully-nonempathic-nikolai.ngrok-free.dev",
+  ],
   plugins: [
     polar({
       client: polarClient,
@@ -37,7 +42,9 @@ export const auth = betterAuth({
               slug: "samrat", // Custom slug for easy reference in Checkout URL, e.g. /checkout/code-sorcerer
             },
           ],
-          successUrl: process.env.POLAR_SUCCESS_URL,
+          successUrl:
+            process.env.POLAR_SUCCESS_URL ||
+            "/dashboard/subscription?success=true",
           authenticatedUsersOnly: true,
         }),
         portal({
@@ -71,7 +78,7 @@ export const auth = betterAuth({
             if (user) {
               await updateUserTier(
                 user.id,
-                user.subscriptionTier as any,
+                user.subscriptionTier as SubscriptionTier,
                 "CANCELLED"
               );
             }
@@ -84,7 +91,7 @@ export const auth = betterAuth({
             });
 
             if (user) {
-              await updateUserTier(user.id, "FREE", "EXPPIRED");
+              await updateUserTier(user.id, "FREE", "EXPIRED");
             }
           },
           onOrderPaid: async () => {},
