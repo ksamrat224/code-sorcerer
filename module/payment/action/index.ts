@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { polarClient } from "@/module/payment/config/polar";
 import prisma from "@/lib/db";
 
-export interface subscriptionDate {
+export interface SubscriptionData {
   user: {
     id: string;
     name: string;
@@ -31,4 +31,32 @@ export interface subscriptionDate {
       };
     };
   } | null;
+}
+
+export async function getSubscriptionData(): Promise<SubscriptionData> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session?.user) {
+    return { user: null, limits: null };
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+  });
+  if (!user) {
+    return { user: null, limits: null };
+  }
+  const limits = await getRemainingLimits(user.id);
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      subscriptionTier: user.subscriptionTier || "FREE",
+      subscriptionStatus: user.subscriptionStatus || null,
+      polarCustomerId: user.polarCustomerId || null,
+      polarSubscriptionId: user.polarSubscriptionId || null,
+    },
+    limits,
+  };
 }
