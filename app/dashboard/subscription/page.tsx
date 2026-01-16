@@ -55,6 +55,20 @@ export default function SubscriptionPage() {
     queryFn: getSubscriptionData,
     refetchOnWindowFocus: true,
   });
+  useEffect(() => {
+    if (success === "true") {
+      const sync = async () => {
+        try {
+          await syncSubscriptionStatus();
+          refetch();
+        } catch (error) {
+          console.error("Failed to sync subscription status", error);
+        }
+      };
+      sync();
+    }
+  }, [success, refetch]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -132,6 +146,8 @@ export default function SubscriptionPage() {
     } catch (error) {
       console.error("Failed to open portal", error);
       setPortalLoading(false);
+    } finally {
+      setPortalLoading(false);
     }
   };
   const handleUpgrade = async () => {
@@ -142,6 +158,8 @@ export default function SubscriptionPage() {
       });
     } catch (error) {
       console.error("Failed to checkout", error);
+      setCheckoutLoading(false);
+    } finally {
       setCheckoutLoading(false);
     }
   };
