@@ -17,8 +17,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { getSubscriptionData } from "@/module/payment/action";
+import {
+  getSubscriptionData,
+  syncSubscriptionStatus,
+} from "@/module/payment/action";
 import { Spinner } from "@/components/ui/spinner";
+import { set } from "zod";
 
 const PLAN_FEATURES = {
   free: [
@@ -105,9 +109,42 @@ export default function SubscriptionPage() {
   const currentTier = data.user.subscriptionTier as "FREE" | "PRO";
   const isPro = currentTier === "PRO";
   const isActive = data.user.subscriptionStatus === "ACTIVE";
-  const handleSync = () => {};
-  const handleManageSubscription = () => {};
-  const handleUpgrade = () => {};
+  const handleSync = async () => {
+    try {
+      setSyncLoading(true);
+      const result = await syncSubscriptionStatus();
+      if (result.success) {
+        toast.success("Subscription status synced successfully");
+        refetch();
+      } else {
+        toast.error("Failed to sync subscription status");
+      }
+    } catch (error) {
+      toast.error("Failed to sync subscription status");
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+  const handleManageSubscription = async () => {
+    try {
+      setPortalLoading(true);
+      await customer.portal();
+    } catch (error) {
+      console.error("Failed to open portal", error);
+      setPortalLoading(false);
+    }
+  };
+  const handleUpgrade = async () => {
+    try {
+      setCheckoutLoading(true);
+      await checkout({
+        slug: "samrat",
+      });
+    } catch (error) {
+      console.error("Failed to checkout", error);
+      setCheckoutLoading(false);
+    }
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
